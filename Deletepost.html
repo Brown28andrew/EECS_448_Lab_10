@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <title>Delete Post</title>
+  </head>
+  <body>
+    <form action= "/~a678b889/Lab_10/DeletePost.php" method= "post">
+    <table border= "1px black">
+      <tr>
+        <td>Author:</td>
+        <td>Post:</td>
+        <td>Delete?:</td>
+      </tr>
+      <?php
+        $mysqli = new mysqli("mysql.eecs.ku.edu", "a678b889", "ri4Aipho", "a678b889");
+        if($mysqli-> connect_errno){
+          printf("connect failed: %s\n", $mysqli-> connect_errno);
+          exit();
+        }
+
+        $num = 1;
+        $userCountQuery = "SELECT COUNT(post_id) AS num FROM Posts";
+        $countResult = $mysqli->query($userCountQuery);
+        $count = $countResult->fetch_assoc();
+        echo "Number of posts: " . $count['num'] . "<br>";
+        $query = "SELECT author_id FROM Posts WHERE post_id = $num";
+        $result = $mysqli->query($query);
+        $row = $result->fetch_assoc();
+        $postQuery= "SELECT content FROM Posts WHERE post_id = $num";
+        $postResult = $mysqli->query($postQuery);
+        $post = $postResult->fetch_assoc();
+
+        while($num <= $count['num']){
+          echo "<tr>";
+
+          echo "<td>";
+          echo $row["author_id"];
+          echo "</td>";
+          echo "<td>";
+          echo $post["content"];
+          echo "</td>";
+
+          echo "<td>";
+          echo "<input type= 'checkbox' name= '$num' value= '$num'>";
+          echo "</td>";
+
+          echo "</tr>";
+          $num++;
+          $query = "SELECT author_id  FROM Posts WHERE post_id = $num";
+          $result = $mysqli->query($query);
+          $row = $result-> fetch_assoc();
+          $postQuery= "SELECT content FROM Posts WHERE post_id = $num";
+          $postResult = $mysqli->query($postQuery);
+          $post = $postResult->fetch_assoc();
+        }
+        $mysqli->close();
+      ?>
+
+    </table>
+    <button name= "submit">Submit</button>
+    </form>
+  </body>
+</html>

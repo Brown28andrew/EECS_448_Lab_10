@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>View User Posts</title>
+  </head>
+  <body>
+    <p>Select a user:</p>
+    <form action= "ViewUserPosts.php" form= "post">
+    <select name= "selectUser" id= "selectUser">
+      <?php
+      $mysqli = new mysqli("mysql.eecs.ku.edu", "a678b889", "ri4Aipho", "a678b889");
+      if ($mysqli->connect_errno) {
+        printf("Connect failed: %s\n", $mysqli->connect_error);
+        exit();
+      }
+
+      $userCountQuery = "SELECT COUNT(user_num) AS num FROM users";
+      $countResult = $mysqli->query($userCountQuery);
+      $count = $countResult->fetch_assoc();
+      $num= $count['num'];
+
+      for($i= 1;$i<= $num;$i++){
+        $query= "SELECT user_id FROM users WHERE user_num = $i";
+        $result= $mysqli->query($query);
+        $user= $result->fetch_assoc();
+
+
+        echo "<option value= '" . $user["user_id"] . "'>";
+        echo $user["user_id"];
+        echo "</option>";
+      }
+
+      $mysqli->close();
+    ?>
+
+    </select>
+    <br><br>
+    <button name= "submit" id= "submit">Submit</button>
+    </form>
+  </body>
+</html>
